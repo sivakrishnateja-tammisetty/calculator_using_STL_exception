@@ -1,0 +1,69 @@
+#include <iostream>
+#include <stdexcept>
+#include <type_traits>
+
+template <typename T>
+class Calculator {
+public:
+    T add(T num1, T num2) {
+        return num1 + num2;
+    }
+
+    T subtract(T num1, T num2) {
+        return num1 - num2;
+    }
+
+    T multiply(T num1, T num2) {
+        return num1 * num2;
+    }
+
+    T divide(T num1, T num2) {
+        if (num2 == 0) {
+            throw std::runtime_error("Division by zero is not allowed.");
+        }
+        return num1 / num2;
+    }
+
+    T modulus(T num1, T num2) {
+        static_assert(std::is_integral<T>::value, "Modulus operation is only supported for integer types.");
+        if (num2 == 0) {
+            throw std::runtime_error("Division by zero is not allowed.");
+        }
+        return num1 % num2;
+    }
+};
+
+int main() {
+    Calculator<int> intCalculator;
+    Calculator<double> doubleCalculator;
+
+    // Integer calculations
+    int num1 = 10;
+    int num2 = 5;
+    std::cout << "Integers:" << std::endl;
+    std::cout << "Sum: " << intCalculator.add(num1, num2) << std::endl;
+    std::cout << "Difference: " << intCalculator.subtract(num1, num2) << std::endl;
+    std::cout << "Product: " << intCalculator.multiply(num1, num2) << std::endl;
+    std::cout << "Quotient: " << intCalculator.divide(num1, num2) << std::endl;
+    std::cout << "Remainder: " << intCalculator.modulus(num1, num2) << std::endl;
+
+    // Double calculations
+    double num3 = 3.14;
+    double num4 = 2.71;
+    std::cout << "\nDoubles:" << std::endl;
+    std::cout << "Sum: " << doubleCalculator.add(num3, num4) << std::endl;
+    std::cout << "Difference: " << doubleCalculator.subtract(num3, num4) << std::endl;
+    std::cout << "Product: " << doubleCalculator.multiply(num3, num4) << std::endl;
+    std::cout << "Quotient: " << doubleCalculator.divide(num3, num4) << std::endl;
+
+    // Attempt to divide by zero
+    try {
+        int num5 = 5;
+        int num6 = 0;
+        intCalculator.divide(num5, num6); // This will throw an exception
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
